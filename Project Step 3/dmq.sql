@@ -45,9 +45,15 @@ FROM weddings, services
 WHERE weddings.weddingID = :weddingID_from_dropdown_input
 AND services.serviceName = :serviceName_from_dropdown_input;
 
+--delete service from wedding
+DELETE FROM weddingServices
+WHERE weddingID = :weddingID_from_dropdown_input
+AND serviceID = :serviceID_from_checkbox
+
 --remove wedding from weddings
 DELETE FROM weddings
-WHERE weddingID = :weddingID_from_dropdown_input;
+WHERE weddingID = :weddingID_from_dropdown_input
+
 
 --get all payment information to populate table of payments
 SELECT invoiceID AS "Invoice ID", clientID AS "Client ID", invoiceDate AS "Invoice Date", totalAmount AS "Total Amount", paymentDate AS "Payment Date" FROM payments;
