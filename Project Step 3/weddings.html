@@ -183,7 +183,14 @@
         <legend><strong>Delete Wedding</strong></legend>
             <fieldset class="fields">
               <p>Enter ID of Wedding to Be Deleted.</p>
-              <label> Wedding ID: </label> <input type="text" name="weddingID" value="101"
+              <label> Wedding ID: </label> <select name="weddingID">
+                <option value="0"> </option>
+                <option value="1">101 </option>
+                <option value="2">102 </option>
+                <option value="3">103 </option>
+                <option value="4">104 </option>
+                <option value="5">105 </option>
+            </select>
             </fieldset><br>
       <input class="btn" type="submit" id="DeleteWedding" value="Delete Wedding">
             <input class="btn" type="button" value="Cancel" onClick="browseWeddings()">
