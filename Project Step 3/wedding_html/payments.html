@@ -1,0 +1,173 @@
+<html>
+<head>
+<title>Payments</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newPayment() { showform('insert'); }
+    function updatePayment(invoiceID) { showform('update'); }
+    function deletePayment(invoiceID)) { showform ('delete'); }
+    function browsePayments() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browsePayments()">
+<h1>Payments</h1>
+
+[ <a href="index.html">Index</a> | <a href="clients.html">Clients</a> | <a href="weddings.html">Weddings</a> | <a href="services.html"> Services</a> | <a href="payments.html"> Payments</a> ]
+
+
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+  <tr>
+    <th><a href="#" onClick="newPayment()">New</a></th>
+    <th></th>
+    <th>invoiceID</th>
+    <th>clientID</th>
+    <th>invoiceDate</th>
+    <th>totalAmount</th>
+    <th>paymentDate</th>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updatePayment('this.paymentID')">Edit</a></td>
+    <td><a href="#" onclick="deletePayment('this.paymentID')">Delete</a></td>
+    <td align="right" >301</td>
+    <td>1</td>
+    <td>2025-01-03</td>
+    <td>20000</td>
+    <td>2025-07-30</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updatePayment('this.paymentID')">Edit</a></td>
+    <td><a href="#" onclick="deletePayment('this.paymentID')">Delete</a></td>
+    <td align="right" >302</td>
+    <td>2</td>
+    <td>2027-03-26</td>
+    <td>25000</td>
+    <td>2027-05-24</td>
+  </tr>
+  
+  <tr>
+    <td><a href="#" onClick="updatePayment('this.paymentID')">Edit</a></td>
+    <td><a href="#" onclick="deletePayment('this.paymentID')">Delete</a></td>
+    <td align="right" >303</td>
+    <td>3</td>
+    <td>2026-01-23</td>
+    <td>18000</td>
+    <td>2026-04-02</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updatePayment('this.paymentID')">Edit</a></td>
+    <td><a href="#" onclick="deletePayment('this.paymentID')">Delete</a></td>
+    <td align="right" >304</td>
+    <td>4</td>
+    <td>2025-12-14</td>
+    <td>30000</td>
+    <td>2026-01-18</td>
+  </tr>
+  <tr>
+    <td><a href="#" onClick="updatePayment('this.paymentID')">Edit</a></td>
+    <td><a href="#" onclick="deletePayment('this.paymentID')">Delete</a></td>
+    <td align="right" >305</td>
+    <td>5</td>
+    <td>2025-10-01</td>
+    <td>7500</td>
+    <td>2025-12-15</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert">
+    <form method="POST" id="addPayment">
+        <legend><strong>Add Payment</strong></legend>
+          <fieldset class="fields">
+            <label> Client ID: </label> <input type="text" name="clientID"><br>
+            <label> Invoice Date: </label> <input type="date" name="invoiceDate"><br>
+            <label> Total Amount: </label> <input type="text" name="totalAmount"><br>
+            <label> Payment Date: </label> <input type="date" name="paymentDate">
+      </fieldset>
+          <input class="btn" type="submit" id="addPayment" value="Add Payment">
+          <input class="btn" type="button" value="Cancel" onClick="browsePayments()">
+	</form> 
+</div><!-- insert -->
+<p>&nbsp;</p>
+<div id="update">
+    <form method="POST" id="UpdatePayment">
+        <legend><strong>Update Payment</strong></legend>
+          <fieldset class="fields">
+          <label> Invoice ID: </label> <select name="serviceID">
+            <option value="0">&nbsp;</option>
+            <option value="1">301</option>
+            <option value="2">302</option>
+            <option value="3">303</option>
+            <option value="4">304</option>
+            <option value="5">305</option>
+            </select><br>
+            <label> Invoice Date: </label> <input type="date" name="invoiceDate" value="2027-03-26"><br>
+            <label> Total Amount: </label> <input type="text" name="totalAmount" value="24900">
+            <label> Payment Date: </label> <input type="date" name="paymentDate" value="2027-05-24">
+      </fieldset>
+          <input class="btn" type="submit" id="UpdateSavePayment" value="Update Payment">
+          <input class="btn" type="button" value="Cancel" onClick="browsePayments()">
+	</form> 
+</div><!-- update -->
+<p>&nbsp;</p>
+<div id="delete" style="display: block">
+    <form method="POST" id="deletePayment">
+        <legend><strong>Delete Payment</strong></legend>
+            <fieldset class="fields">
+                <p>Select Invoice ID of Payment to Be Deleted.</p>
+                <label> Payment ID: </label> <select name="paymentID">
+                  <option value="0">&nbsp;</option>
+                  <option value="1">301</option>
+                  <option value="2">302</option>
+                  <option value="3">303</option>
+                  <option value="4">304</option>
+                  <option value="5">305</option>
+                </select><br>
+              </fieldset><br>
+            </fieldset><br>
+      <input class="btn" type="submit" id="deletePayment" value="Delete Payment">
+            <input class="btn" type="button" value="Cancel" onClick="browsePayments()">
+    </form> 
+  </div><!-- delete -->
+
+</body>
+</html>
