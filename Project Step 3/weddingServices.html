@@ -1,0 +1,123 @@
+<html>
+<head>
+<h1>Wedding Services</h1>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script language="JavaScript">
+    function showSection(section) {
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('addService').style.display = 'none';
+        document.getElementById('deleteService').style.display = 'none';
+        if (section === 'browse') {
+            document.getElementById('browse').style.display = 'block';
+        } 
+        else if (section === 'addService') {
+            document.getElementById('addService').style.display = 'block';
+        } 
+        else if (section === 'deleteService') {
+            document.getElementById('deleteService').style.display = 'block';
+        }
+    }
+    function showBrowse() { showSection('browse'); }
+    function showAddService() { showSection('addService'); }
+    function showDeleteService() { showSection('deleteService'); }
+</script>
+
+[ <a href="clients.html">Clients</a> | <a href="weddings.html">Weddings</a> | <a href="services.html"> Services</a> | <a href="payments.html"> Payments</a> | <a href="weddingServices.html"> Wedding Services</a>]
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Services</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Table: Display Wedding Services Data -->
+<div id="browse">
+    <p><a href="#" onClick="showAll()">Display all forms</a> </p>
+<table border="1" cellpadding="5">
+    <tr>
+        <th>WeddingID</th>
+        <th>serviceID</th>
+    </tr>
+    <tr>
+        <td align="right">101</td>
+        <td align="right">201</td>
+    </tr>
+    <tr>
+        <td align="right">102</td>
+        <td align="right">202</td>
+    </tr>
+    <tr>
+        <td align="right">103</td>
+        <td align="right">203</td>
+    </tr>
+    <tr>
+        <td align="right">104</td>
+        <td align="right">204</td>
+    </tr>
+    <tr>
+        <td align="right">105</td>
+        <td align="right">205</td>
+    </tr>
+</table>
+</div>
+
+<!-- Add Wedding Service -->
+<br></br>
+<div id="addService">
+    <form method="POST" id="addService">
+        <legend><strong>Add Service To Wedding</strong></legend>
+          <fieldset class="fields">
+            <label for="weddingID">Select Wedding:</label>
+            <select name="weddingID" required>
+                <option value="101">101 - 2025-12-03, Japan (Garden)</option>
+                <option value="102">102 - 2027-11-26, Hawaii (Traditional)</option>
+                <option value="103">103 - 2026-07-23, Hawaii (Beach)</option>
+                <option value="104">104 - 2026-04-14, Chicago (City)</option>
+                <option value="105">105 - 2026-01-01, Oregon (Black Tie)</option>
+            </select>
+            <br></br>
+            <label>Select Service(s):</label><br>
+            <input type="checkbox" name="services[]" value="201"> 201 - Live Band (Music) <br>
+            <input type="checkbox" name="services[]" value="202"> 202 - Catering (Food) <br>
+            <input type="checkbox" name="services[]" value="203"> 203 - Photographer (Photography) <br>
+            <input type="checkbox" name="services[]" value="204"> 204 - Stylist (Decor) <br>
+            <input type="checkbox" name="services[]" value="205"> 205 - Bartender (Food) <br>
+          </fieldset>
+            <input class="btn" type="submit" id="addService" value="Add Service to Wedding">
+            <input class="btn" type="button" value="Cancel" onClick="deleteService()">
+                </select><br>
+                
+</div>
+
+<!-- delete service -->
+<div id="delete">
+    <form method="POST" id="deleteService">
+        <legend><strong>Delete Service from Wedding</strong></legend>
+          <fieldset class="fields">
+            <label for="weddingID">Select Wedding:</label>
+            <select name="weddingID" required>
+                <option value="101">101 - 2025-12-03, Japan (Garden)</option>
+                <option value="102">102 - 2027-11-26, Hawaii (Traditional)</option>
+                <option value="103">103 - 2026-07-23, Hawaii (Beach)</option>
+                <option value="104">104 - 2026-04-14, Chicago (City)</option>
+                <option value="105">105 - 2026-01-01, Oregon (Black Tie)</option>
+            </select>
+            <br></br>
+            <label>Select Service(s):</label><br>
+            <input type="checkbox" name="services[]" value="201"> 201 - Live Band (Music) <br>
+            <input type="checkbox" name="services[]" value="202"> 202 - Catering (Food) <br>
+            <input type="checkbox" name="services[]" value="203"> 203 - Photographer (Photography) <br>
+            <input type="checkbox" name="services[]" value="204"> 204 - Stylist (Decor) <br>
+            <input type="checkbox" name="services[]" value="205"> 205 - Bartender (Food) <br>
+          </fieldset>
+            <input class="btn" type="submit" id="addService" value="Remove Service from Wedding">
+            <input class="btn" type="button" value="Cancel" onClick="deleteService()">
+                </select><br>
+                
+</div>
+
+</body>
+</html>
