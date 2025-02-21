@@ -36,6 +36,9 @@ VALUES (
     :totalBudgetInput
 );
 
+--get all wedding services information to populate table of wedding services
+SELECT weddingID AS "Wedding ID", serviceID AS "Service ID" FROM weddingServices
+
 --add service to wedding (M:M relationship addition)
 INSERT INTO weddingServices (weddingID, serviceID)
 SELECT 
