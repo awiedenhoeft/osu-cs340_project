@@ -1,6 +1,3 @@
-<!-- index.hbs -->
-<h1>The server is running!</h1>
-<p>If you see this text, the server is <strong>definitely</strong> working!</p>
 
 {{!-- Create a table --}}
 <table>
@@ -30,7 +27,33 @@
             <td>{{this.weddingDate}}</td>
             <td>{{this.location}}</td>
             <td>{{this.weddingType}}</td>
+            <td>{{this.totalBudget}}</td>
         </tr>
         {{/each}}
     </tbody>
 </table>
+<!-- /views/index.hbs -->
+<h2>Add a New Wedding</h2>
+<p>To add a new wedding, please enter the information below and click `Submit`!</p>
+<form id="add-wedding-form" method="POST" action="/add-wedding-form">
+    <select name="clientID">
+              <option value="">Select Client: </option>
+              {{#each clients}}
+              <option value="{{this.clientID}}">{{this.clientID}}</option>
+            {{/each}}
+    </select><br>
+    
+    <label for="input-weddingDate">Wedding Date: </label>
+    <input type="date" name="input-weddingDate" id="input-weddingDate"><br>
+
+    <label for="input-location">Location: </label>
+    <input type="text" name="input-location" id="input-location"><br>
+
+    <label for="input-weddingType">Wedding Type: </label>
+        <input type="text" name="weddingType" id="input-weddingType"><br>
+
+    <label for="totalBudget">Total Budget: </label>
+    <input type="number" name="input-totalBudget" id="input-totalBudget"><br>
+
+    <input type="submit">
+</form>
