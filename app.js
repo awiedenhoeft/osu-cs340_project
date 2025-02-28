@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 PORT = 1996;
 
+
 // app.js
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
@@ -16,11 +17,9 @@ var db = require('./database/db-connector');
 /* ROUTES */
 // app.js 
 
-// app.js
-
 app.get('/', function(req, res)
     {
-        res.render('/layouts/index.hbs');                    // Note the call to render() and not send(). Using render() ensures the templating engine
+        res.render('index');                    // Note the call to render() and not send(). Using render() ensures the templating engine
     });                                         // will process this file, before sending the finished HTML to the client.
 
 
