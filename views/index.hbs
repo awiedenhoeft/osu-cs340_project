@@ -86,7 +86,7 @@
     <select name="clientID" id="input-clientID">
               <option value="">Select Client: </option>
               {{#each client}}
-              <option value="{{this.clientID}}">{{this.clientName}}</option>
+              <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
             {{/each}}
     </select><br>
     
