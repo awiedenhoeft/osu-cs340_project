@@ -50,34 +50,42 @@
 <body onload="browsePayments()">
 <h1>Payments</h1>
 
-[ <a href="index.html">Index</a> | <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> ]
-
+[ <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> | <a href="/weddingServices.hbs">Wedding Services</a> ]
 
 <div id="browse">
 <p><a href="#" onClick="showAll()">Display all forms</a> </p>
-<table border="1" cellpadding="5">
-   <tr>
-        {{#each data.[0]}}
-        <th>
-            {{@key}}
-        </th>
+<table id="payments-table" border="1" cellpadding="5">
+    {{!-- Header section --}}
+    <thead>
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.invoiceID}}</td>
+            <td>{{this.clientID}}</td>
+            <td>{{this.invoiceDate}}</td>
+            <td>{{this.totalAmount}}</td>
+            <td>{{this.paymentDate}}</td>
+            <td><form action="/delete-payment" method="POST">
+                <input type="hidden" name="invoiceID" value="{{this.invoiceID}}">
+                <button type="submit">Delete</button>
+            </form></td>
+        </tr>
         {{/each}}
-        <th>delete</th>
-    </tr>
-    
-  {{#each data}}
-  <tr>
-    
-    <td>{{this.invoiceID}}</td>
-    <td>{{this.clientID}}</td>
-    <td>{{this.invoiceDate}}</td>
-    <td>{{this.totalAmount}}</td>
-    <td>{{this.paymentDate}}</td>
-    <td><button onclick="deletePayment({{this.invoiceID}}">Delete</button></td>
-  </tr>
-  {{/each}}
+    </tbody>
 </table>
-<script src="./js/delete_payment.js"></script>
+
+<script src=""></script>
 <!-- /views/index.hbs -->
 <h2>Add a New Payment</h2>
 <p>To add a new payment, please enter the information below and click `Submit`!</p>

@@ -1,0 +1,57 @@
+<body onload="browseweddingServices()">
+<h1>Wedding Services</h1>
+
+[ <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> | <a href="/weddingServices.hbs">Wedding Services</a> ]
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a> </p>
+
+<!-- Display Table -->
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Wedding ID</th>
+        <th>Service ID</th>
+        <th>Delete?</th>
+    </tr>
+    {{#each data}}
+    <tr>
+        <td>{{this.weddingID}}</td>
+        <td>{{this.serviceID}}</td>
+
+        <!-- Add Delete Form Inside Each Row -->
+        <td>
+    <form method="POST" action="/delete-wedding-service">
+        <input type="hidden" name="weddingID" value="{{this.weddingID}}">
+        <input type="hidden" name="serviceID" value="{{this.serviceID}}">
+        <button type="submit">Delete</button>
+    </form>
+</td>
+    </tr>
+    {{/each}}
+</table>
+<p>&nbsp;</p>
+
+<!-- Add Wedding Service Form -->
+<form id="add-service-form" method="POST" action="/add-wedding-service">
+    <fieldset>
+        <legend><strong>Add Wedding Service</strong></legend>
+
+        <label for="input-weddingID">Select Wedding: </label>
+        <select name="input-weddingID" id="input-weddingID" required>
+            <option value="">Select Wedding</option>
+            {{#each wedding}}
+            <option value="{{this.weddingID}}">{{this.weddingID}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="input-serviceID">Select Service: </label>
+        <select name="input-serviceID" id="input-serviceID" required>
+            <option value="">Select Service</option>
+            {{#each service}}
+            <option value="{{this.serviceID}}">
+                {{this.serviceID}} - {{this.serviceName}} ({{this.serviceType}})
+            </option>
+            {{/each}}
+        </select><br>
+    </fieldset>
+    <input type="submit">
+</form>

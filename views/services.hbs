@@ -1,0 +1,116 @@
+<body onload="browseServices()">
+<h1>Services</h1>
+
+[ <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> | <a href="weddingServices.hbs">Wedding Services</a> ]
+
+<div id="browse">
+<p><a href="#" onClick="showAll()">Display all forms</a></p>
+
+<!-- Display Table -->
+<table border="1" cellpadding="5">
+    <tr>
+        <th>Service ID</th>
+        <th>Service Name</th>
+        <th>Service Type</th>
+        <th>($) Service Cost</th>
+        <th>Edit</th>
+        <th>Delete</th>
+    </tr>
+    {{#each data}}
+    <tr>
+        <td>{{this.serviceID}}</td>
+        <td>{{this.serviceName}}</td>
+        <td>{{this.serviceType}}</td>
+        <td>{{this.serviceCost}}</td>
+        
+        <!-- Edit Service Link -->
+        <td>
+            <a href="#" onClick="updateService('{{this.serviceID}}')">Edit</a>
+        </td>
+
+        <!-- Delete Service Form -->
+        <td>
+            <form method="POST" action="/delete-service">
+                <input type="hidden" name="serviceID" value="{{this.serviceID}}">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {{/each}}
+</table>
+<p>&nbsp;</p>
+
+<!-- Add Service Form -->
+<form id="add-service-form" method="POST" action="/add-service">
+    <fieldset>
+        <legend>Add a New Service</legend>
+        <label for="input-serviceName">Service Name:</label>
+        <input type="text" name="input-serviceName" id="input-serviceName" required><br>
+
+        <label for="input-serviceType">Service Type:</label>
+        <select name="input-serviceType" id="input-serviceType" required>
+            <option value="">Select Service Type</option>
+            <option value="Photography">Photography</option>
+            <option value="Food">Food</option>
+            <option value="Decor">Decor</option>
+            <option value="Music">Music</option>
+        </select><br>
+
+        <label for="input-serviceCost">Service Cost ($):</label>
+        <input type="number" name="input-serviceCost" id="input-serviceCost" required><br>
+
+    </fieldset>
+     <input type="submit" value="Add Service">
+
+</form>
+
+<p>&nbsp;</p>
+
+<!-- update--> 
+<form id="update-service-form" method="POST" action="/update-service">
+    <fieldset>
+        <legend>Update Service</legend>
+        <label for="update-serviceID">Select ID:</label>
+        <select name="update-serviceID" id="update-serviceID" required>
+            {{#each data}}
+            <option value="{{this.serviceID}}">{{this.serviceID}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="update-serviceName">Service Name:</label>
+        <input type="text" name="update-serviceName" id="update-serviceName" required><br>
+
+        <label for="update-serviceType">Service Type:</label>
+        <select name="update-serviceType" id="update-serviceType" required>
+            <option value="">Select Service Type</option>
+            <option value="Photography">Photography</option>
+            <option value="Food">Food</option>
+            <option value="Decor">Decor</option>
+            <option value="Music">Music</option>
+        </select><br>
+
+        <label for="update-serviceCost">Service Cost ($):</label>
+        <input type="number" name="update-serviceCost" id="update-serviceCost" required><br>
+    </fieldset>
+        <input type="submit" value="Update Service">
+        <input type="button" value="Cancel" onclick="browseServices()">
+</form>
+
+<p>&nbsp;</p>
+<!-- delete --> 
+<form id="delete-service-form" method="POST" action="/delete-service">
+    <fieldset>
+        <legend>Delete Service</legend>
+        <label for="delete-serviceID">Select ID of Service to Delete:</label>
+        <select name="delete-serviceID" id="delete-serviceID" required>
+            {{#each data}}
+            <option value="{{this.serviceID}}">{{this.serviceID}}</option>
+            {{/each}}
+        </select><br>
+
+    </fieldset>
+        <input type="submit" value="Delete Service">
+        <input type="button" value="Cancel" onclick="browseServices()">
+</form>
+
+</div>

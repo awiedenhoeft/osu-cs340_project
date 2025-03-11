@@ -50,12 +50,13 @@
 <body onload="browseWeddings()">
 <h1>Weddings</h1>
 
-[ <a href="index.html">Index</a> |  <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> ]
-
+[ <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> | <a href="/weddingServices.hbs">Wedding Services</a> ]
 
 <div id="browse">
 <p><a href="#" onClick="showAll()">Display all forms</a> </p>
-<table border="1" cellpadding="5">
+<table id="wedding-table" border="1" cellpadding="5">
+  {{! -- Header section --}}
+  <thead>
    <tr>
         {{#each data.[0]}}
         <th>
@@ -64,19 +65,22 @@
         {{/each}}
         <th>delete</th>
     </tr>
-    
+  </thead>
+
+  {{!-- Body section --}}  
   {{#each data}}
-  <tr>
-    
-    <td>{{this.weddingID}}</td>
-    <td>{{this.clientID}}</td>
-    <td>{{this.weddingDate}}</td>
-    <td>{{this.location}}</td>
-    <td>{{this.weddingType}}</td>
-    <td>{{this.totalBudget}}</td>
-    <td><button onclick="deleteWedding({{this.weddingID}}">Delete</button></td>
-  </tr>
-  {{/each}}
+  <tbody>
+    <tr data-value={{this.id}}>
+      <td>{{this.weddingID}}</td>
+      <td>{{this.clientID}}</td>
+      <td>{{this.weddingDate}}</td>
+      <td>{{this.location}}</td>
+      <td>{{this.weddingType}}</td>
+      <td>{{this.totalBudget}}</td>
+      <td><button onclick="deleteWedding({{this.weddingID}}">Delete</button></td>
+    </tr>
+    {{/each}}
+  </tbody>
 </table>
 <script src="./js/delete_wedding.js"></script>
 <!-- /views/index.hbs -->
@@ -100,7 +104,7 @@
     <input type="text" name="input-weddingType" id="input-weddingType"><br>
 
     <label for="totalBudget">Total Budget: </label>
-    <input type="number" name="input-totalBudget" id="input-totalBudget"><br>
+    <input min="0" type="number" name="input-totalBudget" id="input-totalBudget"><br>
 
     <input type="submit">
 </form>

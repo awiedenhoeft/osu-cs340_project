@@ -35,7 +35,7 @@ app.get('/', function(req, res)
                 return res.render('index', {data: wedding, client: client}); 
             })
                            
-        })                                                      // an object where 'data' is equal to the 'rows' we
+        })                                                      
     });        
 
 //READ function for clients
@@ -47,8 +47,43 @@ app.get('/clients.hbs', function(req, res)
             
             res.render('clients', {data: rows});
                             
-        })                                                      // an object where 'data' is equal to the 'rows' we
+        })                                                      
     });        
+
+//READ function for services
+app.get('/services.hbs', function(req, res)
+    {  
+        let query1 = "SELECT * FROM services;";               // Define our query
+
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+            
+            res.render('services', {data: rows});
+                            
+        })                                                      
+    });  
+
+//READ function for wedding services
+app.get('/weddingServices.hbs', function(req, res)
+    {  
+        let query1 = "SELECT * FROM weddingServices;";
+        let query2 = "SELECT * FROM weddings;"
+        let query3 = "SELECT * FROM services;"
+
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+            
+            let weddingService = rows;
+
+            db.pool.query(query2, function(error, rows, fields) {
+                let wedding = rows;
+
+                db.pool.query(query3, function(error, rows, fields) {
+                    let service = rows;
+                    return res.render('weddingServices', {data: weddingService, wedding: wedding, service: service}); 
+                })
+            })
+        })
+                           
+    });                                                      
 
 //READ function for payments
 app.get('/payments.hbs', function(req, res)
@@ -69,7 +104,7 @@ app.get('/payments.hbs', function(req, res)
                 return res.render('payments', {data: payment, client: client}); 
             })
                            
-        })                                                      // an object where 'data' is equal to the 'rows' we
+        })                                                      
     });    
 
 //CREATE function for weddings
@@ -88,8 +123,7 @@ app.post('/add-wedding-form', function(req, res){
             res.sendStatus(400);
         }
 
-        // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-        // presents it on the screen
+        // If there was no error, reload the page
         else
         {
             res.redirect('/');
@@ -99,7 +133,6 @@ app.post('/add-wedding-form', function(req, res){
 
 //CREATE function for clients
 app.post('/add-client-form', function(req, res){
-    // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
     // Create the query and run it on the database
@@ -114,8 +147,7 @@ app.post('/add-client-form', function(req, res){
             res.sendStatus(400);
         }
 
-        // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-        // presents it on the screen
+        // If there was no error, reload the page
         else
         {
             res.redirect('/clients');
@@ -123,9 +155,40 @@ app.post('/add-client-form', function(req, res){
     })
 });
 
+// ADD SERVICE
+app.post('/add-service', function(req, res) {
+    let serviceName = req.body['input-serviceName']; 
+    let serviceType = req.body['input-serviceType']; 
+    let serviceCost = req.body['input-serviceCost']; 
+
+    let query = `
+        INSERT INTO services (serviceName, serviceType, serviceCost)
+        VALUES (?, ?, ?);
+    `;
+
+    db.pool.query(query, [serviceName, serviceType, serviceCost], function(error, results, fields) {
+        res.redirect('/services.hbs');
+    });
+});
+
+//CREATE wedding service
+app.post('/add-wedding-service', function(req, res) {
+    const { 'input-weddingID': weddingID, 'input-serviceID': serviceID } = req.body; 
+
+    let query = `INSERT INTO weddingServices (weddingID, serviceID) VALUES (?, ?)`;
+
+    db.pool.query(query, [weddingID, serviceID], function(error, rows, fields) {
+        if (error) {
+            console.error("Error adding service:", error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('/weddingServices');
+        }
+    });
+});
+
 //CREATE function for payments
 app.post('/add-payment-form', function(req, res){
-    // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
     // Create the query and run it on the database
@@ -140,15 +203,91 @@ app.post('/add-payment-form', function(req, res){
             res.sendStatus(400);
         }
 
-        // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-        // presents it on the screen
+        // If there is no error, reload the page
         else
         {
-            res.redirect('/payments');
+            res.redirect('/payments.hbs');
         }
     })
 });
 
+// update service
+app.post('/update-service', function(req, res) {
+    let serviceID = req.body['update-serviceID'];
+    let serviceName = req.body['update-serviceName'];
+    let serviceType = req.body['update-serviceType'];
+    let serviceCost = req.body['update-serviceCost'];
+
+    let query = `
+        UPDATE services
+        SET serviceName = ?, serviceType = ?, serviceCost = ?
+        WHERE serviceID = ?;
+    `;
+
+    db.pool.query(query, [serviceName, serviceType, serviceCost, serviceID], function(error, results, fields) {
+        res.redirect('/services.hbs');
+    });
+});
+
+//DELETE function for clients
+app.post('/delete-client/', function(req,res){
+    let clientID = req.body.clientID;
+    let query= `DELETE FROM clients WHERE clientID = ?`;
+    
+    db.pool.query(query, [clientID], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+             res.redirect('/clients.hbs');
+        }
+    });
+});
+
+// DELETE SERVICE
+app.post('/delete-service', function(req, res) {
+    let serviceID = req.body['delete-serviceID'];
+
+    let query = `
+        DELETE FROM services
+        WHERE serviceID = ?;
+    `;
+
+    db.pool.query(query, [serviceID], function(error, results, fields) {
+        res.redirect('/services.hbs');
+    });
+});
+
+//DELETE wedding service
+app.post('/delete-wedding-service', function(req, res) {
+    const { weddingID, serviceID } = req.body;
+
+    let query = `DELETE FROM weddingServices WHERE weddingID = ? AND serviceID = ?`;
+
+    db.pool.query(query, [weddingID, serviceID], function(error, rows, fields) {
+        if (error) {
+            console.error("Error deleting wedding service:", error);
+            return res.sendStatus(400);
+        } else {
+            res.redirect('/weddingServices');  // Redirect back to the page
+        }
+    });
+});
+
+//DELETE function for payments
+app.post('/delete-payment/', function(req,res){
+    let invoiceID = req.body.invoiceID;
+    let query= `DELETE FROM payments WHERE invoiceID = ?`;
+    
+    db.pool.query(query, [invoiceID], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+             res.redirect('/payments.hbs');
+        }
+    });
+});
 
 /* LISTENER */
 app.listen(PORT, function(){
