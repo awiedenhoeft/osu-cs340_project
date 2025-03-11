@@ -82,7 +82,7 @@
 <h2>Add a New Payment</h2>
 <p>To add a new payment, please enter the information below and click `Submit`!</p>
 <form id="add-payment-form" method="POST" action="/add-payment-form">
-    <select name="clientID" id="input-clientID">
+    <select name="input-clientID" id="input-clientID">
         <option value="">Select Client: </option>
         {{#each client}}
         <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>

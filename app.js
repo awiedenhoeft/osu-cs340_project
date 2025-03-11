@@ -76,7 +76,6 @@ app.get('/payments.hbs', function(req, res)
 app.post('/add-wedding-form', function(req, res){
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
-
     // Create the query and run it on the database
     query1 = `INSERT INTO weddings (clientID, weddingDate, location, weddingType, totalBudget) VALUES ('${data['input-clientID']}', '${data['input-weddingDate']}', '${data['input-location']}', '${data['input-weddingType']}', '${data['input-totalBudget']}')`;
     db.pool.query(query1, function(error, rows, fields){
@@ -145,7 +144,7 @@ app.post('/add-payment-form', function(req, res){
         // presents it on the screen
         else
         {
-            res.redirect('/clients');
+            res.redirect('/payments');
         }
     })
 });

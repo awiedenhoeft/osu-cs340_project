@@ -83,10 +83,10 @@
 <h2>Add a New Wedding</h2>
 <p>To add a new wedding, please enter the information below and click `Submit`!</p>
 <form id="add-wedding-form" method="POST" action="/add-wedding-form">
-    <select name="clientID" id="input-clientID">
+    <select name="input-clientID" id="input-clientID">
       <option value="">Select Client: </option>
       {{#each client}}
-      <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
+      <option value="{{this.clientID}}">{{this.lastName}}</option>
       {{/each}}
     </select><br>
     
@@ -97,7 +97,7 @@
     <input type="text" name="input-location" id="input-location"><br>
 
     <label for="input-weddingType">Wedding Type: </label>
-        <input type="text" name="weddingType" id="input-weddingType"><br>
+    <input type="text" name="input-weddingType" id="input-weddingType"><br>
 
     <label for="totalBudget">Total Budget: </label>
     <input type="number" name="input-totalBudget" id="input-totalBudget"><br>
