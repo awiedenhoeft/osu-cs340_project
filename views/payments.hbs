@@ -1,6 +1,6 @@
 
 <head>
-<title>Clients</title>
+<title>Payments</title>
 <link href="style.css" rel="stylesheet" type="text/css" />
 <script language="JavaScript">
 		function showform(dowhat) {
@@ -39,16 +39,16 @@
 				document.getElementById('delete').style.display = 'none';
 			}
 		}
-    function newClient() { showform('insert'); }
-    function updateClient(clientID) { showform('update'); }
-    function deleteClient(clientID)) { showform ('delete'); }
-    function browseClients() { showform ('browse'); }
+    function newPayment() { showform('insert'); }
+    function updatePayment(invoiceID) { showform('update'); }
+    function deletePayment(invoiceID)) { showform ('delete'); }
+    function browsePayments() { showform ('browse'); }
     function showAll() { showform ('all'); }
 </script>
 </head>
 
-<body onload="browseClients()">
-<h1>Clients</h1>
+<body onload="browsePayments()">
+<h1>Payments</h1>
 
 [ <a href="index.html">Index</a> | <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> ]
 
@@ -68,31 +68,35 @@
   {{#each data}}
   <tr>
     
+    <td>{{this.invoiceID}}</td>
     <td>{{this.clientID}}</td>
-    <td>{{this.firstName}}</td>
-    <td>{{this.lastName}}</td>
-    <td>{{this.email}}</td>
-    <td>{{this.phoneNum}}</td>
-    <td><button onclick="deleteClient({{this.clientID}}">Delete</button></td>
+    <td>{{this.invoiceDate}}</td>
+    <td>{{this.totalAmount}}</td>
+    <td>{{this.paymentDate}}</td>
+    <td><button onclick="deletePayment({{this.invoiceID}}">Delete</button></td>
   </tr>
   {{/each}}
 </table>
-<script src="./js/delete_client.js"></script>
+<script src="./js/delete_payment.js"></script>
 <!-- /views/index.hbs -->
-<h2>Add a New Client</h2>
-<p>To add a new client, please enter the information below and click `Submit`!</p>
-<form id="add-client-form" method="POST" action="/add-client-form">
-    <label for="input-firstName">First Name: </label>
-    <input type="text" name="input-firstName" id="input-firstName"><br>
+<h2>Add a New Payment</h2>
+<p>To add a new payment, please enter the information below and click `Submit`!</p>
+<form id="add-payment-form" method="POST" action="/add-payment-form">
+    <select name="clientID" id="input-clientID">
+        <option value="">Select Client: </option>
+        {{#each client}}
+        <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
+        {{/each}}
+    </select><br>
     
-    <label for="input-lastName">Last Name: </label>
-    <input type="text" name="input-lastName" id="input-lastName"><br>
+    <label for="input-invoiceDate">Invoice Date: </label>
+    <input type="date" name="input-invoiceDate" id="input-invoiceDate"><br>
 
-    <label for="input-email">Email: </label>
-    <input type="text" name="input-email" id="input-email"><br>
+    <label for="input-totalAmount">Total Amount: </label>
+    <input type="number" name="input-totalAmount" id="input-totalAmount"><br>
 
-    <label for="input-phoneNum">Phone Number: </label>
-        <input type="text" name="input-phoneNum" id="input-phoneNum"><br>
+    <label for="input-paymentDate">Payment Date: </label>
+        <input type="date" name="input-paymentDate" id="input-paymentDate"><br>
 
     <input type="submit">
 </form>

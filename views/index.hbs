@@ -50,7 +50,7 @@
 <body onload="browseWeddings()">
 <h1>Weddings</h1>
 
-[ <a href="index.html">Index</a> |  <a href="clients.hbs">Clients</a> | <a href="weddings.html">Weddings</a> | <a href="services.html"> Services</a> | <a href="payments.html"> Payments</a> ]
+[ <a href="index.html">Index</a> |  <a href="clients.hbs">Clients</a> | <a href="/">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> ]
 
 
 <div id="browse">
@@ -84,10 +84,10 @@
 <p>To add a new wedding, please enter the information below and click `Submit`!</p>
 <form id="add-wedding-form" method="POST" action="/add-wedding-form">
     <select name="clientID" id="input-clientID">
-              <option value="">Select Client: </option>
-              {{#each client}}
-              <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
-            {{/each}}
+      <option value="">Select Client: </option>
+      {{#each client}}
+      <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
+      {{/each}}
     </select><br>
     
     <label for="input-weddingDate">Wedding Date: </label>
