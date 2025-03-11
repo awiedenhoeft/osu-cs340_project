@@ -103,7 +103,7 @@ INSERT INTO `services` (`serviceID`, `serviceName`, `serviceType`, `serviceCost`
 
 CREATE TABLE `weddings` (
   `weddingID` int(11) NOT NULL,
-  `clientID` int(11) NOT NULL,
+  `clientName` int(11) NOT NULL,
   `weddingDate` date NOT NULL,
   `location` varchar(50) NOT NULL,
   `weddingType` varchar(50) DEFAULT NULL,

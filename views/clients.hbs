@@ -26,7 +26,7 @@
 				document.getElementById('update').style.display = 'none';
 				document.getElementById('delete').style.display = 'block';
 			}
-      else if (dowhat == 'all'){
+            else if (dowhat == 'all'){
 				document.getElementById('browse').style.display = 'block';
 				document.getElementById('insert').style.display = 'block';
 				document.getElementById('update').style.display = 'block';
@@ -39,18 +39,18 @@
 				document.getElementById('delete').style.display = 'none';
 			}
 		}
-    function newWedding() { showform('insert'); }
-    function updateWedding(weddingID) { showform('update'); }
-    function deleteWedding(weddingID)) { showform ('delete'); }
-    function browseWeddings() { showform ('browse'); }
+    function newClient() { showform('insert'); }
+    function updateClient(clientID) { showform('update'); }
+    function deleteClient(clientID)) { showform ('delete'); }
+    function browseClients() { showform ('browse'); }
     function showAll() { showform ('all'); }
 </script>
 </head>
 
-<body onload="browseWeddings()">
-<h1>Weddings</h1>
+<body onload="browseClients()">
+<h1>Clients</h1>
 
-[ <a href="index.html">Index</a> |  <a href="clients.hbs">Clients</a> | <a href="weddings.html">Weddings</a> | <a href="services.html"> Services</a> | <a href="payments.html"> Payments</a> ]
+[ <a href="index.html">Index</a> |  <a href="clients.html">Clients</a> | <a href="clients.html">Clients</a> | <a href="services.html"> Services</a> | <a href="payments.html"> Payments</a> ]
 
 
 <div id="browse">
@@ -68,39 +68,31 @@
   {{#each data}}
   <tr>
     
-    <td>{{this.weddingID}}</td>
     <td>{{this.clientID}}</td>
-    <td>{{this.weddingDate}}</td>
-    <td>{{this.location}}</td>
-    <td>{{this.weddingType}}</td>
-    <td>{{this.totalBudget}}</td>
-    <td><button onclick="deleteWedding({{this.weddingID}}">Delete</button></td>
+    <td>{{this.firstName}}</td>
+    <td>{{this.lastName}}</td>
+    <td>{{this.email}}</td>
+    <td>{{this.phoneNum}}</td>
+    <td><button onclick="deleteClient({{this.clientID}}">Delete</button></td>
   </tr>
   {{/each}}
 </table>
-<script src="./js/delete_wedding.js"></script>
+<script src="./js/delete_client.js"></script>
 <!-- /views/index.hbs -->
-<h2>Add a New Wedding</h2>
-<p>To add a new wedding, please enter the information below and click `Submit`!</p>
-<form id="add-wedding-form" method="POST" action="/add-wedding-form">
-    <select name="clientID" id="input-clientID">
-              <option value="">Select Client: </option>
-              {{#each client}}
-              <option value="{{this.clientID}}">{{this.clientName}}</option>
-            {{/each}}
-    </select><br>
+<h2>Add a New Client</h2>
+<p>To add a new client, please enter the information below and click `Submit`!</p>
+<form id="add-client-form" method="POST" action="/add-client-form">
+    <label for="input-firstName">First Name: </label>
+    <input type="text" name="input-firstName" id="input-firstName"><br>
     
-    <label for="input-weddingDate">Wedding Date: </label>
-    <input type="date" name="input-weddingDate" id="input-weddingDate"><br>
+    <label for="input-lastName">Last Name: </label>
+    <input type="text" name="input-lastName" id="input-lastName"><br>
 
-    <label for="input-location">Location: </label>
-    <input type="text" name="input-location" id="input-location"><br>
+    <label for="input-email">Email: </label>
+    <input type="text" name="input-email" id="input-email"><br>
 
-    <label for="input-weddingType">Wedding Type: </label>
-        <input type="text" name="weddingType" id="input-weddingType"><br>
-
-    <label for="totalBudget">Total Budget: </label>
-    <input type="number" name="input-totalBudget" id="input-totalBudget"><br>
+    <label for="input-phoneNum">Phone Number: </label>
+        <input type="text" name="input-phoneNum" id="input-phoneNum"><br>
 
     <input type="submit">
 </form>

@@ -4,7 +4,7 @@ var app = express();
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(express.static('public'))
-PORT = 1996;
+PORT = 1999;
 
 const { engine } = require('express-handlebars');
 var exphbs = require('express-handlebars');     // Import express-handlebars
@@ -20,9 +20,20 @@ app.get('/', function(req, res)
     {  
         let query1 = "SELECT * FROM weddings;";               // Define our query
 
-        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+        let query2 = "SELECT * FROM clients;";
 
-            res.render('index', {data: rows});                  // Render the index.hbs file, and also send the renderer
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+            //Save the wedding
+            let wedding = rows;
+
+            //Run the second query
+            db.pool.query(query2, (error, rows, fields) => {
+
+                //Save the clients
+                let client = rows;
+                return res.render('index', {data: wedding, client: client}); 
+            })
+                           
         })                                                      // an object where 'data' is equal to the 'rows' we
     });        
 
@@ -31,9 +42,6 @@ app.get('/', function(req, res)
 app.post('/add-wedding-form', function(req, res){
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
-
-    // Capture NULL values
-    
 
     // Create the query and run it on the database
     query1 = `INSERT INTO weddings (clientID, weddingDate, location, weddingType, totalBudget) VALUES ('${data['input-clientID']}', '${data['input-weddingDate']}', '${data['input-location']}', '${data['input-weddingType']}', '${data['input-totalBudget']}')`;
