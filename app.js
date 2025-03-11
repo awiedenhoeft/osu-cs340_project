@@ -16,8 +16,12 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 var db = require('./database/db-connector');
 
 /* ROUTES */
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/views/index.html');
+});
+
 // READ function for weddings
-app.get('/', function(req, res)
+app.get('/weddings.hbs', function(req, res)
     {  
         let query1 = "SELECT * FROM weddings;";               // Define our query
 
@@ -32,7 +36,7 @@ app.get('/', function(req, res)
 
                 //Save the clients
                 let client = rows;
-                return res.render('index', {data: wedding, client: client}); 
+                return res.render('weddings', {data: wedding, client: client}); 
             })
                            
         })                                                      
