@@ -1,69 +1,19 @@
-
-<head>
-<title>Clients</title>
-<link href="style.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
-		function showform(dowhat) {
-			/*
-			* four DIVS: browse, insert, update, delete
-			* this function sets one visible the others not
-			*/
-			if (dowhat == 'insert'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'update'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'delete'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'block';
-			}
-            else if (dowhat == 'all'){
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'block';
-			}
-			else { //by default display browse
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-		}
-    function newClient() { showform('insert'); }
-    function updateClient(clientID) { showform('update'); }
-    function deleteClient(clientID)) { showform ('delete'); }
-    function browseClients() { showform ('browse'); }
-    function showAll() { showform ('all'); }
-</script>
-</head>
-
 <body onload="browseClients()">
 <h1>Clients</h1>
 
 [ <a href="/">Index</a> | <a href="clients.hbs">Clients</a> | <a href="weddings.hbs">Weddings</a> | <a href="services.hbs"> Services</a> | <a href="payments.hbs"> Payments</a> | <a href="/weddingServices.hbs">Wedding Services</a> ]
+<p>&nbsp;</p>
 
-<div id="browse">
-<p><a href="#" onClick="showAll()">Display all forms</a> </p>
 <table id="clients-table" border="1" cellpadding="5">
 	{{!-- Header section --}}
 	<thead>
 		<tr>
-			{{#each data.[0]}}
-			<th>
-				{{@key}}
-			</th>
-			{{/each}}
-			<th>delete</th>
+			<th>Client ID</th>
+			<th>First Name</th>
+			<th>Last Name</th>
+			<th>Email</th>
+			<th>Phone Number</th>
+			<th>Delete</th>
 		</tr>
     </thead>
 
@@ -71,7 +21,6 @@
 	<tbody>
 		{{#each data}}
 		<tr>
-		
 			<td>{{this.clientID}}</td>
 			<td>{{this.firstName}}</td>
 			<td>{{this.lastName}}</td>
@@ -88,23 +37,70 @@
 	</tbody>
 </table>
 
-<script src=""></script>
-<!-- /views/index.hbs -->
+<!-- Form to add new client -->
 <h2>Add a New Client</h2>
 <p>To add a new client, please enter the information below and click `Submit`!</p>
 <form id="add-client-form" method="POST" action="/add-client-form">
-    <label for="input-firstName">First Name: </label>
-    <input type="text" name="input-firstName" id="input-firstName"><br>
-    
-    <label for="input-lastName">Last Name: </label>
-    <input type="text" name="input-lastName" id="input-lastName"><br>
+	<fieldset>
+		<label for="input-firstName">First Name: </label>
+		<input type="text" name="input-firstName" id="input-firstName"><br>
+		
+		<label for="input-lastName">Last Name: </label>
+		<input type="text" name="input-lastName" id="input-lastName"><br>
 
-    <label for="input-email">Email: </label>
-    <input type="text" name="input-email" id="input-email"><br>
+		<label for="input-email">Email: </label>
+		<input type="text" name="input-email" id="input-email"><br>
 
-    <label for="input-phoneNum">Phone Number: </label>
-        <input type="text" name="input-phoneNum" id="input-phoneNum"><br>
-
-    <input type="submit">
+		<label for="input-phoneNum">Phone Number: </label>
+		<input type="text" name="input-phoneNum" id="input-phoneNum"><br>
+	</fieldset>
+    <input type="submit" value="Add Client">
 </form>
+
+<!-- Form to update client information -->
+<h2>Update Client Information</h2>
+<p>To update a client's information, use the form below.</p>
+<form id="update-client-form" method="POST" action="/update-client">
+	<fieldset>
+		<label for="update-clientID">Client ID: </label>
+		<select name="update-clientID" id="update-clientID" required>
+			<option value="test"> </option>
+			{{#each data}}
+			<option value="{{this.clientID}}">{{this.clientID}}</option>
+			{{/each}}
+		</select><br>
+
+		<label for="update-firstName">First Name: </label>
+		<input type="text" name="update-firstName" id="update-firstName" required><br>
+		
+		<label for="update-lastName">Last Name: </label>
+		<input type="text" name="update-lastName" id="update-lastName" required><br>
+
+		<label for="update-email">Email: </label>
+		<input type="text" name="update-email" id="update-email" required><br>
+
+		<label for="update-phoneNum">Phone Number: </label>
+		<input type="text" name="update-phoneNum" id="update-phoneNum" required><br>
+	</fieldset>
+
+    <input type="submit" value="Update Client">
+    <input type="button" value="Cancel" onclick="browseClients()">
+</form>
+
+<!-- Form to delete client -->
+<h2>Delete Client</h2>
+<p>To delete a client, select the corresponding client ID from the drop-down menu.</p>
+<form id="delete-client-form" method="POST" action="/delete-client">
+	<fieldset>
+		<label for="clientID">Select ID: </label>
+		<select name="clientID" id="clientID" required>
+			<option value="test"> </option>
+			{{#each data}}
+			<option value="{{this.clientID}}">{{this.clientID}}</option>
+			{{/each}}
+		</select>
+	</fieldset>
+		<input type="submit" value="Delete Client">
+</form>
+
 </body>

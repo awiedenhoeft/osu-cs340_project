@@ -31,8 +31,8 @@ CREATE TABLE `clients` (
   `clientID` int(11) NOT NULL,
   `firstName` varchar(50) NOT NULL,
   `lastName` varchar(50) NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `phoneNum` varchar(15) NOT NULL
+  `email` varchar(100),
+  `phoneNum` varchar(15)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
@@ -54,7 +54,7 @@ INSERT INTO `clients` (`clientID`, `firstName`, `lastName`, `email`, `phoneNum`)
 
 CREATE TABLE `payments` (
   `invoiceID` int(11) NOT NULL,
-  `clientID` int(11) NOT NULL,
+  `clientID` int(11),
   `invoiceDate` date DEFAULT NULL,
   `totalAmount` decimal(10,2) DEFAULT NULL,
   `paymentDate` date DEFAULT NULL
@@ -103,7 +103,7 @@ INSERT INTO `services` (`serviceID`, `serviceName`, `serviceType`, `serviceCost`
 
 CREATE TABLE `weddings` (
   `weddingID` int(11) NOT NULL,
-  `clientName` int(11) NOT NULL,
+  `clientID` int(11) NOT NULL,
   `weddingDate` date NOT NULL,
   `location` varchar(50) NOT NULL,
   `weddingType` varchar(50) DEFAULT NULL,
@@ -129,7 +129,8 @@ INSERT INTO `weddings` (`weddingID`, `clientID`, `weddingDate`, `location`, `wed
 
 CREATE TABLE `weddingServices` (
   `weddingID` int(11) NOT NULL,
-  `serviceID` int(11) NOT NULL
+  `serviceID` int(11),
+  PRIMARY KEY (`weddingID`, `serviceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
 
 --
@@ -178,9 +179,8 @@ ALTER TABLE `weddings`
 --
 -- Indexes for table `weddingServices`
 --
-ALTER TABLE `weddingServices`
-  ADD PRIMARY KEY (`weddingID`,`serviceID`),
-  ADD KEY `serviceID` (`serviceID`);
+-- ALTER TABLE `weddingServices`
+--   ADD PRIMARY KEY (`weddingID`, 'serviceID');
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -218,7 +218,7 @@ ALTER TABLE `weddings`
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
-  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`clientID`) REFERENCES `clients` (`clientID`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `weddings`
@@ -231,9 +231,11 @@ ALTER TABLE `weddings`
 -- Constraints for table `weddingServices`
 --
 ALTER TABLE `weddingServices`
-  ADD CONSTRAINT `weddingServices_ibfk_1` FOREIGN KEY (`weddingID`) REFERENCES `weddings` (`weddingID`),
-  ADD CONSTRAINT `weddingServices_ibfk_2` FOREIGN KEY (`serviceID`) REFERENCES `services` (`serviceID`) ON DELETE SET NULL;
+  ADD CONSTRAINT `weddingServices_ibfk_1` FOREIGN KEY (`weddingID`) REFERENCES `weddings` (`weddingID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `weddingServices_ibfk_2` FOREIGN KEY (`serviceID`) REFERENCES `services` (`serviceID`) ON DELETE CASCADE;
 COMMIT;
+
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

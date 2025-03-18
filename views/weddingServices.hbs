@@ -31,13 +31,12 @@
 <p>&nbsp;</p>
 
 <!-- Add Wedding Service Form -->
+<h2>Add Wedding Service</h2>
 <form id="add-service-form" method="POST" action="/add-wedding-service">
     <fieldset>
-        <legend><strong>Add Wedding Service</strong></legend>
-
         <label for="input-weddingID">Select Wedding: </label>
         <select name="input-weddingID" id="input-weddingID" required>
-            <option value="">Select Wedding</option>
+            <option value="test"></option>
             {{#each wedding}}
             <option value="{{this.weddingID}}">{{this.weddingID}}</option>
             {{/each}}
@@ -45,7 +44,7 @@
 
         <label for="input-serviceID">Select Service: </label>
         <select name="input-serviceID" id="input-serviceID" required>
-            <option value="">Select Service</option>
+            <option value="test"> </option>
             {{#each service}}
             <option value="{{this.serviceID}}">
                 {{this.serviceID}} - {{this.serviceName}} ({{this.serviceType}})
@@ -53,5 +52,61 @@
             {{/each}}
         </select><br>
     </fieldset>
-    <input type="submit">
+    <input type="submit" value="Add Wedding Service">
 </form>
+
+<!-- Update Wedding Service -->
+<h2>Update Wedding Information</h2>
+<p>To update wedding information, please use the form below.</p>
+<form id="update-wedding-form" method="POST" action="/update-wedding">
+	<fieldset>
+        <label for="update-weddingID">Select Wedding: </label>
+        <select name="update-weddingID" id="update-weddingID" required>
+            <option value="test"> </option>
+            {{#each wedding}}
+            <option value="{{this.weddingID}}">{{this.weddingID}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="update-service">Select Service: </label>
+        <select name="update-wedding-client" id="update-wedding-client" required>
+            <option value="test"> </option>
+            {{#each service}}
+            <option value="{{this.serviceID}}">
+                {{this.serviceID}} - {{this.serviceName}} ({{this.serviceType}})
+            </option>
+            {{/each}}
+        </select><br>
+
+	</fieldset>
+
+    <input type="submit" value="Update Wedding Service">
+    <input type="button" value="Cancel" onclick="browseweddingServices()">
+</form>
+
+<!-- Delete wedding service -->
+<h2>Delete Wedding Service</h2>
+<p>To delete a service from a wedding, select the corresponding wedding ID and service ID from the drop-down menu.</p>
+<form id="delete-wedding-service-form" method="POST" action="/delete-wedding-service">
+	<fieldset>
+		<label for="weddingID">Select Wedding: </label>
+		<select name="weddingID" id="weddingID" required>
+             <option value="test"> </option>
+			{{#each data}}
+			<option value="{{this.weddingID}}">{{this.weddingID}}</option>
+			{{/each}}
+		</select>
+        <br>
+        <label for="serviceID">Select Service: </label>
+        <select name="serviceID" id="serviceID" required>
+            <option value="test"> </option>
+            {{#each service}}
+            <option value="{{this.serviceID}}">
+                {{this.serviceID}} - {{this.serviceName}} ({{this.serviceType}})
+            </option>
+            {{/each}}
+        </select>
+	</fieldset>
+		<input type="submit" value="Delete Wedding Service">
+</form>
+</body>

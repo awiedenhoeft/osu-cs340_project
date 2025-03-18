@@ -1,52 +1,3 @@
-
-<head>
-<title>Weddings</title>
-<link href="style.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
-		function showform(dowhat) {
-			/*
-			* four DIVS: browse, insert, update, delete
-			* this function sets one visible the others not
-			*/
-			if (dowhat == 'insert'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'update'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'delete'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'block';
-			}
-      else if (dowhat == 'all'){
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'block';
-			}
-			else { //by default display browse
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-		}
-    function newWedding() { showform('insert'); }
-    function updateWedding(weddingID) { showform('update'); }
-    function deleteWedding(weddingID)) { showform ('delete'); }
-    function browseWeddings() { showform ('browse'); }
-    function showAll() { showform ('all'); }
-</script>
-</head>
-
 <body onload="browseWeddings()">
 <h1>Weddings</h1>
 
@@ -58,12 +9,13 @@
   {{! -- Header section --}}
   <thead>
    <tr>
-        {{#each data.[0]}}
-        <th>
-            {{@key}}
-        </th>
-        {{/each}}
-        <th>delete</th>
+      <th>Wedding ID</th>
+      <th>Client ID</th>
+      <th>Wedding Date</th>
+      <th>Location</th>
+      <th>Wedding Type</th>
+      <th>Total Budget ($)</th>
+      <th>Delete</th>
     </tr>
   </thead>
 
@@ -77,20 +29,26 @@
       <td>{{this.location}}</td>
       <td>{{this.weddingType}}</td>
       <td>{{this.totalBudget}}</td>
-      <td><button onclick="deleteWedding({{this.weddingID}}">Delete</button></td>
+       <td><form action="/delete-wedding" method="POST">
+                <input type="hidden" name="weddingID" value="{{this.weddingID}}">
+                <button type="submit">Delete</button>
+            </form></td>
     </tr>
     {{/each}}
   </tbody>
 </table>
 <script src="./js/delete_wedding.js"></script>
-<!-- /views/index.hbs -->
+
+<!-- Form to add wedding -->
 <h2>Add a New Wedding</h2>
-<p>To add a new wedding, please enter the information below and click `Submit`!</p>
+<p>To add a new wedding, please enter the information below and click `Add Wedding`!</p>
 <form id="add-wedding-form" method="POST" action="/add-wedding-form">
+  <fieldset>
+    <label for="input-clientID">Select Name: </label>
     <select name="input-clientID" id="input-clientID">
-      <option value="">Select Client: </option>
+      <option value=""> </option>
       {{#each client}}
-      <option value="{{this.clientID}}">{{this.lastName}}</option>
+      <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
       {{/each}}
     </select><br>
     
@@ -105,7 +63,62 @@
 
     <label for="totalBudget">Total Budget: </label>
     <input min="0" type="number" name="input-totalBudget" id="input-totalBudget"><br>
+  </fieldset>
+    <input type="submit" value="Add Wedding">
+</form>
 
-    <input type="submit">
+<!-- Form to update wedding information -->
+<h2>Update Wedding Information</h2>
+<p>To update wedding information, please use the form below.</p>
+<form id="update-wedding-form" method="POST" action="/update-wedding">
+	<fieldset>
+        <label for="update-weddingID">Wedding ID: </label>
+        <select name="update-weddingID" id="update-weddingID" required>
+            <option value="test"> </option>
+            {{#each data}}
+            <option value="{{this.weddingID}}">{{this.weddingID}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="update-client">Client: </label>
+        <select name="update-wedding-client" id="update-wedding-client" required>
+            <option value="test">Select Client: </option>
+            {{#each client}}
+            <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="update-weddingDate">Wedding Date: </label>
+        <input type="date" name="update-weddingDate" id="update-weddingDate" required><br>
+        
+        <label for="update-location">Location: </label>
+        <input type="text" name="update-location" id="update-location" required><br>
+
+        <label for="update-weddingType">Wedding Type: </label>
+        <input type="text" name="update-weddingType" id="update-weddingType"><br>
+
+        <label for="update-totalBudget">Total Budget: </label>
+        <input min="0" type="number" name="update-totalBudget" id="update-totalBudget">
+	</fieldset>
+
+    <input type="submit" value="Update Wedding">
+    <input type="button" value="Cancel" onclick="browseWeddings()">
+</form>
+
+<!-- Form to delete wedding -->
+<h2>Delete Wedding</h2>
+<p>To delete a wedding, select the corresponding wedding ID from the drop-down menu.</p>
+<form id="delete-wedding-form" method="POST" action="/delete-wedding">
+	<fieldset>
+		<label for="weddingID">Select ID: </label>
+    
+		<select name="weddingID" id="weddingID" required>
+      <option value="test"> </option>
+			{{#each data}}
+			<option value="{{this.weddingID}}">{{this.weddingID}}</option>
+			{{/each}}
+		</select>
+	</fieldset>
+		<input type="submit" value="Delete Wedding">
 </form>
 </body>

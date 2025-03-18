@@ -20,6 +20,18 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 
+//READ function for clients
+app.get('/clients.hbs', function(req, res)
+    {  
+        let query1 = "SELECT * FROM clients;";               // Define our query
+
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+            
+            res.render('clients', {data: rows});
+                            
+        })                                                      
+    });        
+
 // READ function for weddings
 app.get('/weddings.hbs', function(req, res)
     {  
@@ -42,17 +54,6 @@ app.get('/weddings.hbs', function(req, res)
         })                                                      
     });        
 
-//READ function for clients
-app.get('/clients.hbs', function(req, res)
-    {  
-        let query1 = "SELECT * FROM clients;";               // Define our query
-
-        db.pool.query(query1, function(error, rows, fields){    // Execute the query
-            
-            res.render('clients', {data: rows});
-                            
-        })                                                      
-    });        
 
 //READ function for services
 app.get('/services.hbs', function(req, res)
@@ -65,6 +66,28 @@ app.get('/services.hbs', function(req, res)
                             
         })                                                      
     });  
+
+//READ function for payments
+app.get('/payments.hbs', function(req, res)
+    {  
+        let query1 = "SELECT * FROM payments;";               // Define our query
+
+        let query2 = "SELECT * FROM clients;";
+
+        db.pool.query(query1, function(error, rows, fields){    // Execute the query
+            //Save the payment
+            let payment = rows;
+
+            //Run the second query
+            db.pool.query(query2, (error, rows, fields) => {
+
+                //Save the clients
+                let client = rows;
+                return res.render('payments', {data: payment, client: client}); 
+            })
+                           
+        })                                                      
+    }); 
 
 //READ function for wedding services
 app.get('/weddingServices.hbs', function(req, res)
@@ -87,79 +110,43 @@ app.get('/weddingServices.hbs', function(req, res)
             })
         })
                            
-    });                                                      
-
-//READ function for payments
-app.get('/payments.hbs', function(req, res)
-    {  
-        let query1 = "SELECT * FROM payments;";               // Define our query
-
-        let query2 = "SELECT * FROM clients;";
-
-        db.pool.query(query1, function(error, rows, fields){    // Execute the query
-            //Save the payment
-            let payment = rows;
-
-            //Run the second query
-            db.pool.query(query2, (error, rows, fields) => {
-
-                //Save the clients
-                let client = rows;
-                return res.render('payments', {data: payment, client: client}); 
-            })
-                           
-        })                                                      
-    });    
-
-//CREATE function for weddings
-app.post('/add-wedding-form', function(req, res){
-    // Capture the incoming data and parse it back to a JS object
-    let data = req.body;
-    // Create the query and run it on the database
-    query1 = `INSERT INTO weddings (clientID, weddingDate, location, weddingType, totalBudget) VALUES ('${data['input-clientID']}', '${data['input-weddingDate']}', '${data['input-location']}', '${data['input-weddingType']}', '${data['input-totalBudget']}')`;
-    db.pool.query(query1, function(error, rows, fields){
-
-        // Check to see if there was an error
-        if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
-            res.sendStatus(400);
-        }
-
-        // If there was no error, reload the page
-        else
-        {
-            res.redirect('/');
-        }
-    })
-});
+    });      
 
 //CREATE function for clients
 app.post('/add-client-form', function(req, res){
     let data = req.body;
 
-    // Create the query and run it on the database
     query1 = `INSERT INTO clients (firstName, lastName, email, phoneNum) VALUES ('${data['input-firstName']}', '${data['input-lastName']}', '${data['input-email']}', '${data['input-phoneNum']}')`;
     db.pool.query(query1, function(error, rows, fields){
 
         // Check to see if there was an error
         if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
             res.sendStatus(400);
-        }
-
-        // If there was no error, reload the page
-        else
-        {
-            res.redirect('/clients');
+        } else {
+            res.redirect('clients.hbs');
         }
     })
 });
 
-// ADD SERVICE
+//CREATE function for weddings
+app.post('/add-wedding-form', function(req, res){
+    let data = req.body;
+
+    query1 = `INSERT INTO weddings (clientID, weddingDate, location, weddingType, totalBudget) VALUES ('${data['input-clientID']}', '${data['input-weddingDate']}', '${data['input-location']}', '${data['input-weddingType']}', '${data['input-totalBudget']}')`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+            console.log(error)
+            res.sendStatus(400);
+        } else  {
+            res.redirect('weddings.hbs');
+        }
+    })
+});
+
+// CREATE function for Services 
 app.post('/add-service', function(req, res) {
     let serviceName = req.body['input-serviceName']; 
     let serviceType = req.body['input-serviceType']; 
@@ -171,11 +158,33 @@ app.post('/add-service', function(req, res) {
     `;
 
     db.pool.query(query, [serviceName, serviceType, serviceCost], function(error, results, fields) {
-        res.redirect('/services.hbs');
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('services.hbs');
+        }
     });
 });
 
-//CREATE wedding service
+//CREATE function for payments
+app.post('/add-payment-form', function(req, res){
+    let data = req.body;
+
+    query1 = `INSERT INTO payments (clientID, invoiceDate, totalAmount, paymentDate) VALUES ('${data['input-clientID']}', '${data['input-invoiceDate']}', '${data['input-totalAmount']}', '${data['input-paymentDate']}')`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+            console.log(error)
+            res.sendStatus(400);
+        }  else  {
+            res.redirect('payments.hbs');
+        }
+    })
+});
+
+//CREATE function for wedding services
 app.post('/add-wedding-service', function(req, res) {
     const { 'input-weddingID': weddingID, 'input-serviceID': serviceID } = req.body; 
 
@@ -186,36 +195,61 @@ app.post('/add-wedding-service', function(req, res) {
             console.error("Error adding service:", error);
             res.sendStatus(400);
         } else {
-            res.redirect('/weddingServices');
+            res.redirect('weddingServices.hbs');
         }
     });
 });
 
-//CREATE function for payments
-app.post('/add-payment-form', function(req, res){
-    let data = req.body;
+// UPDATE function for clients
+app.post('/update-client', function(req, res) {
+    let clientID = req.body['update-clientID'];
+    let firstName = req.body['update-firstName'];
+    let lastName = req.body['update-lastName'];
+    let email = req.body['update-email'];
+    let phoneNum = req.body['update-phoneNum'];
 
-    // Create the query and run it on the database
-    query1 = `INSERT INTO payments (clientID, invoiceDate, totalAmount, paymentDate) VALUES ('${data['input-clientID']}', '${data['input-invoiceDate']}', '${data['input-totalAmount']}', '${data['input-paymentDate']}')`;
-    db.pool.query(query1, function(error, rows, fields){
+    let query = `
+        UPDATE clients
+        SET firstName = ?, lastName = ?, email = ?, phoneNum = ?
+        WHERE clientID = ?;
+    `;
 
-        // Check to see if there was an error
+    db.pool.query(query, [firstName, lastName, email, phoneNum, clientID], function(error, results, fields) {
         if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
+            console.log(error);
             res.sendStatus(400);
+        } else {
+            res.redirect('clients.hbs');
         }
-
-        // If there is no error, reload the page
-        else
-        {
-            res.redirect('/payments.hbs');
-        }
-    })
+    });
 });
 
-// update service
+// UPDATE function for weddings
+app.post('/update-wedding', function(req, res) {
+    let weddingID = req.body['update-weddingID'];
+    let clientID = req.body['update-wedding-client'];
+    let weddingDate = req.body['update-weddingDate'];
+    let location = req.body['update-location'];
+    let weddingType = req.body['update-weddingType'];
+    let totalBudget = req.body['update-totalBudget'];
+
+    let query = `
+        UPDATE weddings
+        SET clientID = ?, weddingDate = ?, location = ?, weddingType = ?, totalBudget = ?
+        WHERE weddingID = ?;
+    `;
+
+    db.pool.query(query, [clientID, weddingDate, location, weddingType, totalBudget, weddingID], function(error, results, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('weddings.hbs');
+        }
+    });
+});
+
+// UPDATE function for services
 app.post('/update-service', function(req, res) {
     let serviceID = req.body['update-serviceID'];
     let serviceName = req.body['update-serviceName'];
@@ -229,12 +263,63 @@ app.post('/update-service', function(req, res) {
     `;
 
     db.pool.query(query, [serviceName, serviceType, serviceCost, serviceID], function(error, results, fields) {
-        res.redirect('/services.hbs');
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('services.hbs');
+        }
     });
 });
 
-//DELETE function for clients
-app.post('/delete-client/', function(req,res){
+// UPDATE function for payments
+app.post('/update-payment', function(req, res) {
+    let invoiceID = req.body['update-invoiceID']
+    let clientID = req.body['update-client'];
+    let invoiceDate = req.body['update-invoiceDate'];
+    let totalAmount = req.body['update-totalAmount'];
+    let paymentDate = req.body['update-paymentDate'];
+
+    let query = `
+        UPDATE payments
+        SET clientID = ?, invoiceDate = ?, totalAmount = ?, paymentDate = ?
+        WHERE invoiceID = ?;
+    `;
+
+    db.pool.query(query, [clientID, invoiceDate, totalAmount, paymentDate, invoiceID], function(error, results, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('payments.hbs');
+        }
+    });
+});
+
+// UPDATE function for wedding services
+app.post('/update-weddingServices', function(req, res) {
+    let weddingID = req.body['update-wedding'];
+    let serviceID = req.body['update-service'];
+
+    let query = `
+        UPDATE weddingServices
+        SET weddingID = ?, serviceID = ?
+        WHERE weddingID = ? AND serviceID = ?;
+    `;
+
+    db.pool.query(query, [serviceName, serviceType, serviceCost, serviceID], function(error, results, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('weddingServices.hbs');
+        }
+        
+    });
+});
+
+// DELETE client
+app.post('/delete-client', function(req,res){
     let clientID = req.body.clientID;
     let query= `DELETE FROM clients WHERE clientID = ?`;
     
@@ -243,14 +328,29 @@ app.post('/delete-client/', function(req,res){
             console.log(error);
             res.sendStatus(400);
         } else {
-             res.redirect('/clients.hbs');
+             res.redirect('clients.hbs');
         }
     });
 });
 
-// DELETE SERVICE
+// DELETE wedding
+app.post('/delete-wedding', function(req, res){
+    let weddingID = req.body.weddingID;
+    let query= 'DELETE FROM weddings WHERE weddingID = ?';
+
+    db.pool.query(query, [weddingID], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.redirect('weddings.hbs');
+        } 
+    })
+});
+
+// DELETE service
 app.post('/delete-service', function(req, res) {
-    let serviceID = req.body['delete-serviceID'];
+    let serviceID = req.body.serviceID;
 
     let query = `
         DELETE FROM services
@@ -258,11 +358,31 @@ app.post('/delete-service', function(req, res) {
     `;
 
     db.pool.query(query, [serviceID], function(error, results, fields) {
-        res.redirect('/services.hbs');
+        if (error) {
+            console.log(error)
+            res.sendStatus(400);
+        } else {
+        res.redirect('services.hbs');
+        }
     });
 });
 
-//DELETE wedding service
+// DELETE payment
+app.post('/delete-payment/', function(req,res){
+    let invoiceID = req.body.invoiceID;
+    let query= `DELETE FROM payments WHERE invoiceID = ?`;
+    
+    db.pool.query(query, [invoiceID], function(error, rows, fields) {
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+             res.redirect('payments.hbs');
+        }
+    });
+});
+
+// DELETE wedding service
 app.post('/delete-wedding-service', function(req, res) {
     const { weddingID, serviceID } = req.body;
 
@@ -273,25 +393,12 @@ app.post('/delete-wedding-service', function(req, res) {
             console.error("Error deleting wedding service:", error);
             return res.sendStatus(400);
         } else {
-            res.redirect('/weddingServices');  // Redirect back to the page
+            res.redirect('weddingServices.hbs');  // Redirect back to the page
         }
     });
 });
 
-//DELETE function for payments
-app.post('/delete-payment/', function(req,res){
-    let invoiceID = req.body.invoiceID;
-    let query= `DELETE FROM payments WHERE invoiceID = ?`;
-    
-    db.pool.query(query, [invoiceID], function(error, rows, fields) {
-        if (error) {
-            console.log(error);
-            res.sendStatus(400);
-        } else {
-             res.redirect('/payments.hbs');
-        }
-    });
-});
+
 
 /* LISTENER */
 app.listen(PORT, function(){

@@ -1,52 +1,3 @@
-
-<head>
-<title>Payments</title>
-<link href="style.css" rel="stylesheet" type="text/css" />
-<script language="JavaScript">
-		function showform(dowhat) {
-			/*
-			* four DIVS: browse, insert, update, delete
-			* this function sets one visible the others not
-			*/
-			if (dowhat == 'insert'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'update'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'none';
-			}
-			else if (dowhat == 'delete'){
-				document.getElementById('browse').style.display = 'none';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'block';
-			}
-            else if (dowhat == 'all'){
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'block';
-				document.getElementById('update').style.display = 'block';
-				document.getElementById('delete').style.display = 'block';
-			}
-			else { //by default display browse
-				document.getElementById('browse').style.display = 'block';
-				document.getElementById('insert').style.display = 'none';
-				document.getElementById('update').style.display = 'none';
-				document.getElementById('delete').style.display = 'none';
-			}
-		}
-    function newPayment() { showform('insert'); }
-    function updatePayment(invoiceID) { showform('update'); }
-    function deletePayment(invoiceID)) { showform ('delete'); }
-    function browsePayments() { showform ('browse'); }
-    function showAll() { showform ('all'); }
-</script>
-</head>
-
 <body onload="browsePayments()">
 <h1>Payments</h1>
 
@@ -54,16 +5,17 @@
 
 <div id="browse">
 <p><a href="#" onClick="showAll()">Display all forms</a> </p>
+
 <table id="payments-table" border="1" cellpadding="5">
     {{!-- Header section --}}
     <thead>
         <tr>
-            {{#each data.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-            <th>delete</th>
+            <th>Invoice ID</th>
+            <th>Client ID</th>
+            <th>Invoice Date</th>
+            <th>Total Amount ($)</th>
+            <th>Payment Date</th>
+            <th>Delete</th>
         </tr>
     </thead>
 
@@ -85,27 +37,79 @@
     </tbody>
 </table>
 
-<script src=""></script>
-<!-- /views/index.hbs -->
+<!-- Form for creating new payment -->
 <h2>Add a New Payment</h2>
-<p>To add a new payment, please enter the information below and click `Submit`!</p>
+<p>To add a new payment, please enter the information below and click `Add Payment`!</p>
 <form id="add-payment-form" method="POST" action="/add-payment-form">
-    <select name="input-clientID" id="input-clientID">
-        <option value="">Select Client: </option>
-        {{#each client}}
-        <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
-        {{/each}}
-    </select><br>
-    
-    <label for="input-invoiceDate">Invoice Date: </label>
-    <input type="date" name="input-invoiceDate" id="input-invoiceDate"><br>
+    <fieldset>
+            <label for="input-clientID">Select Client: </label>
+            <select name="input-clientID" id="input-clientID">
+                <option value="test"> </option>
+                {{#each client}}
+                <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
+                {{/each}}
+            </select><br>
+            
+            <label for="input-invoiceDate">Invoice Date: </label>
+            <input type="date" name="input-invoiceDate" id="input-invoiceDate"><br>
 
-    <label for="input-totalAmount">Total Amount: </label>
-    <input type="number" name="input-totalAmount" id="input-totalAmount"><br>
+            <label for="input-totalAmount">Total Amount: </label>
+            <input min="0" type="number" name="input-totalAmount" id="input-totalAmount"><br>
 
-    <label for="input-paymentDate">Payment Date: </label>
-        <input type="date" name="input-paymentDate" id="input-paymentDate"><br>
+            <label for="input-paymentDate">Payment Date: </label>
+            <input type="date" name="input-paymentDate" id="input-paymentDate"><br>
+        </fieldset>
+        <input type="submit" value="Add Payment">
+</form>
 
-    <input type="submit">
+<!-- Form to update payment information -->
+<h2>Update Payment Information</h2>
+<p>To update payment information, please use the form below.</p>
+<form id="update-payment-form" method="POST" action="/update-payment">
+	<fieldset>
+        <label for="update-invoiceID">Invoice ID: </label>
+        <select name="update-invoiceID" id="update-invoiceID" required>
+            <option value="test"> </option>
+            {{#each data}}
+            <option value="{{this.invoiceID}}">{{this.invoiceID}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="update-client">Client: </label>
+        <select name="update-client" id="update-client" required>
+            <option value="test"> </option>
+            {{#each client}}
+            <option value="{{this.clientID}}">{{this.firstName}} {{this.lastName}}</option>
+            {{/each}}
+        </select><br>
+
+        <label for="update-invoiceDate">Invoice Date: </label>
+        <input type="date" name="update-invoiceDate" id="update-invoiceDate" required><br>
+        
+        <label for="update-totalAmount">Total Amount: </label>
+        <input min="0" type="number" name="update-totalAmount" id="update-totalAmount" required><br>
+
+        <label for="update-paymentDate">Payment Date: </label>
+        <input type="date" name="update-paymentDate" id="update-paymentDate"><br>
+	</fieldset>
+
+    <input type="submit" value="Update Payment">
+    <input type="button" value="Cancel" onclick="browsePayments()">
+</form>
+
+<!-- Form to delete payment -->
+<h2>Delete Payment</h2>
+<p>To delete a payment, select the corresponding invoice ID from the drop-down menu.</p>
+<form id="delete-payment-form" method="POST" action="/delete-payment">
+	<fieldset>
+		<label for="invoiceID">Select ID: </label>
+		<select name="invoiceID" id="invoiceID" required>
+             <option value="test"> </option>
+			{{#each data}}
+			<option value="{{this.invoiceID}}">{{this.invoiceID}}</option>
+			{{/each}}
+		</select>
+	</fieldset>
+		<input type="submit" value="Delete Payment">
 </form>
 </body>
